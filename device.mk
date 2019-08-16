@@ -85,7 +85,8 @@ PRODUCT_PACKAGES += \
 # Ramdisk
 PRODUCT_PACKAGES += \
     fstab.qcom \
-    init.target.rc
+    init.target.rc \
+    init.xiaomi_parts.rc
 
 # Sensors
 PRODUCT_PACKAGES += \
