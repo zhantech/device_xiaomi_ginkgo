@@ -135,7 +135,7 @@
     <string name="fastcharge_summary">Charge upto 900mA when connected to a computer via USB 3.0 port</string>
 
     <!-- Vibration -->
-    <string name="vibration_title">Haptic feedback</string>
+    <string name="vibration_title">Vibration Control</string>
     <string name="vibration_strength_title">Strength</string>
 
     <!-- CustomSeekBarPreference -->
