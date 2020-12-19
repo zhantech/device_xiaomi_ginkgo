@@ -1,8 +1,8 @@
 #
-# Copyright (C) 2020 Havoc-OS
+# Copyright (C) 2020 RR-OS
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/havoc_ginkgo.mk
+    $(LOCAL_DIR)/rr_ginkgo.mk
