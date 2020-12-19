@@ -28,7 +28,8 @@
 #
 
 on early-init
-    write /proc/sys/kernel/sched_boost 1
+    write /dev/stune/schedtune.boost 50
+    write /dev/stune/schedtune.prefer_idle 1
     symlink /data/tombstones /tombstones
 
 on init
@@ -57,7 +58,6 @@ on init
 
 on early-fs
     start vold
-
 
 on fs
     start hwservicemanager
@@ -122,20 +122,6 @@ on boot
     start rmt_storage
     start rfs_access
 
-    # For cpusets initialize for Silver Only first and then Silver + Gold
-    # Silver Only configuration cannot work with 0-7
-    write /dev/cpuset/top-app/cpus 0-3
-    write /dev/cpuset/audio-app/cpus 1-2
-    write /dev/cpuset/foreground/cpus 0-3
-    write /dev/cpuset/foreground/boost/cpus 0-3
-    write /dev/cpuset/background/cpus 0-3
-    write /dev/cpuset/system-background/cpus 0-3
-    write /dev/cpuset/top-app/cpus 0-7
-    write /dev/cpuset/foreground/cpus 0-7
-    write /dev/cpuset/foreground/boost/cpus 0-7
-    write /dev/cpuset/background/cpus 0-7
-    write /dev/cpuset/system-background/cpus 0-7
-
     # Add a cpuset for the camera daemon
     # We want all cores for camera
     mkdir /dev/cpuset/camera-daemon
@@ -167,14 +153,30 @@ on boot
     chown system system /sys/class/leds/led:switch_1/brightness
     chown system system /sys/class/leds/flashlight/brightness
 
-    # D2TW
-    chown system system /proc/tp_gesture
-    chmod 0660 /proc/tp_gesture
+    # DT2W
+    chown system system /sys/touchpanel/double_tap
+    chmod 0660 /sys/touchpanel/double_tap
+
+    # Kernelspace battery saver
+    chown system system /sys/module/battery_saver/parameters/enabled
+    chmod 0660 /sys/module/battery_saver/parameters/enabled
 
     # access permissions for FPC service
     chown system system /sys/bus/platform/devices/soc/soc:fpc1020/irq
     chown system system /sys/bus/platform/devices/soc/soc:fpc1020/wakeup_enable
     chmod 0666 /dev/qseecom
+
+    # KCAL
+    chown system system /sys/devices/platform/kcal_ctrl.0/kcal_enable
+    chmod 0660 /sys/devices/platform/kcal_ctrl.0/kcal_enable
+    chown system system /sys/devices/platform/kcal_ctrl.0/kcal
+    chmod 0660 /sys/devices/platform/kcal_ctrl.0/kcal
+    chown system system /sys/devices/platform/kcal_ctrl.0/kcal_sat
+    chmod 0660 /sys/devices/platform/kcal_ctrl.0/kcal_sat
+    chown system system /sys/devices/platform/kcal_ctrl.0/kcal_val
+    chmod 0660 /sys/devices/platform/kcal_ctrl.0/kcal_val
+    chown system system /sys/devices/platform/kcal_ctrl.0/kcal_cont
+    chmod 0660 /sys/devices/platform/kcal_ctrl.0/kcal_cont
 
     #Load WLAN driver
     chown wifi wifi /sys/module/wlan/parameters/fwpath
@@ -268,23 +270,23 @@ service cdsprpcd /vendor/bin/cdsprpcd
    user system
    group system
 
-service nqnfcinfo /system/vendor/bin/nqnfcinfo
+service nqnfcinfo /vendor/bin/nqnfcinfo
     class late_start
     group nfc
     user system
     oneshot
     disabled
 
-service nqnfc_1_2_hal_service /vendor/bin/hw/vendor.nxp.hardware.nfc@1.2-service
-    override
+service nqnfc_2_0_hal_service /vendor/bin/hw/vendor.nxp.hardware.nfc@2.0-service
     class hal
     user nfc
     group nfc
+    override
     disabled
 
 on property:ro.product.device=willow
     enable nqnfcinfo
-    enable nqnfc_1_2_hal_service
+    enable nqnfc_2_0_hal_service
 
 on property:sys.thermallct.isincall=1
     write /sys/class/power_supply/battery/device/thermalcall 1
@@ -293,6 +295,12 @@ on property:sys.thermallct.isincall=0
     write /sys/class/power_supply/battery/device/thermalcall 0
 
 on property:sys.boot_completed=1
+    write /dev/stune/schedtune.prefer_idle 0
+    write /dev/stune/schedtune.boost 0
+
+    # Enable ZRAM on boot_complete
+    swapon_all /vendor/etc/fstab.qcom
+
     # Runtime fs tuning
     write /sys/block/sda/queue/read_ahead_kb 128
     write /sys/block/sda/queue/nr_requests 128

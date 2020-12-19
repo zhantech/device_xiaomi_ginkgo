@@ -24,7 +24,6 @@
 #include "vendor_init.h"
 
 using android::base::GetProperty;
-using android::init::property_set;
 using std::string;
 
 void property_override(string prop, string value)
@@ -53,7 +52,8 @@ void vendor_load_properties()
     }
 
     // Override all partitions' props
-    string prop_partitions[] = { "", "odm.", "product.", "system.", "vendor." };
+    string prop_partitions[] = { "", "odm.", "product.", "system.",
+					"system_ext.", "bootimage.", "vendor." };
 
     for (const string &prop : prop_partitions) {
         property_override(string("ro.product.") + prop + string("name"), device);
@@ -68,13 +68,12 @@ void vendor_load_properties()
     // Set camera model for EXIF data
     property_override("persist.vendor.camera.model", model);
 
+    // Enable UI blur
+    property_override("persist.sys.sf.disable_blurs", "0");
+
     // Set dalvik heap configuration
-    char const *heapstartsize;
-    char const *heapgrowthlimit;
-    char const *heapsize;
-    char const *heapminfree;
-    char const *heapmaxfree;
-    char const *heaptargetutilization;
+    string heapstartsize, heapgrowthlimit, heapsize, heapminfree,
+			heapmaxfree, heaptargetutilization;
 
     struct sysinfo sys;
     sysinfo(&sys);
@@ -105,10 +104,10 @@ void vendor_load_properties()
         heapmaxfree = "8m";
     }
 
-    property_set("dalvik.vm.heapstartsize", heapstartsize);
-    property_set("dalvik.vm.heapgrowthlimit", heapgrowthlimit);
-    property_set("dalvik.vm.heapsize", heapsize);
-    property_set("dalvik.vm.heaptargetutilization", heaptargetutilization);
-    property_set("dalvik.vm.heapminfree", heapminfree);
-    property_set("dalvik.vm.heapmaxfree", heapmaxfree);
+    property_override("dalvik.vm.heapstartsize", heapstartsize);
+    property_override("dalvik.vm.heapgrowthlimit", heapgrowthlimit);
+    property_override("dalvik.vm.heapsize", heapsize);
+    property_override("dalvik.vm.heaptargetutilization", heaptargetutilization);
+    property_override("dalvik.vm.heapminfree", heapminfree);
+    property_override("dalvik.vm.heapmaxfree", heapmaxfree);
 }
