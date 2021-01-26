@@ -44,8 +44,5 @@ TARGET_LAUNCHER := lawnchair
 # Buildtype
 RR_BUILDTYPE := Milestone
 
-# RR Wallpapers
-BUILD_RR_WALLPAPERS := true
-
 # Fingerprint
 BUILD_FINGERPRINT := google/redfin/redfin:11/RQ1A.210105.003/7005429:user/release-keys
