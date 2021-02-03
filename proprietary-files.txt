@@ -1787,10 +1787,6 @@ vendor/lib64/libgcs-osal.so|5a8792ba064d0bead4b4b507a838049296cf529e
 vendor/lib64/libgcs.so|03dbfb8fe614aa41066c019f91b3fd958ec270b7
 vendor/lib64/liblistensoundmodel2.so|7bdfd5732168c6b41349bf13790be6e7a3c0abc4
 
-# Listen - Hardware
-vendor/lib/hw/sound_trigger.primary.trinket.so
-vendor/lib64/hw/sound_trigger.primary.trinket.so
-
 # Media - from LA.UM.9.11.r1-03200-NICOBAR.0
 -vendor/lib/libMpeg4SwEncoder.so|060eb742d882b0a557371520fa6d13d523143ba5
 -vendor/lib64/libMpeg4SwEncoder.so|cd156c84f8c5900a83a9309df7283aa2ec5cefe4
