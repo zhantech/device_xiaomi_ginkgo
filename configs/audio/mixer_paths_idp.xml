@@ -375,9 +375,9 @@
     <ctl name="TX_DEC6 Volume" value="90" />
     <ctl name="TX_DEC7 Volume" value="90" />
 
-    <ctl name="ADC1 Volume" value="6" />
+    <ctl name="ADC1 Volume" value="12" />
     <ctl name="ADC2 Volume" value="12" />
-    <ctl name="ADC3 Volume" value="6" />
+    <ctl name="ADC3 Volume" value="12" />
 
     <!-- Compander controls -->
     <ctl name="WSA_COMP1 Switch" value="0" />
